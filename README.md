@@ -16,4 +16,4 @@ Using terminal, follow the instruction below.
 1. Go to you directory for the project.
 2. Go inside the src folder. `$ cd DEM/src/`
 3. Execute runserver function inside manage.py. `$ ./manage.py runserver`
-4. Go to http://localhost:8000/ to access the server
+4. Go to <http://localhost:8000/> to access the server

@@ -1,8 +1,13 @@
 # DEM
 Welcome to the Project
 
-$ cd my_project_folder $ virtualenv venv.
-$ virtualenv -p /usr/bin/python2.7 venv.
-$ source venv/bin/activate.
+
+
+## Set Up
+Follow the instruction below to set up for the project
+
+1. Go to the directory you want to use.
+$ virtualenv DEM.
+$ source DEM/bin/activate.
 $ pip install requests.
 $ deactivate.

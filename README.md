@@ -1,7 +1,7 @@
 # DEM
 Welcome to the Project
 
-## Set Up
+## Setting Up
 Follow the instruction below to set up for the project using terminal.
 
 1. Go to the directory you want to use.

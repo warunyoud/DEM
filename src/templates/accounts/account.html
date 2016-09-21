@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %} {{profile.user.username}} | DEM {% endblock %}
+{% load staticfiles %}
+{% block content %}
+
+<div class="row row-offcanvas row-offcanvas-right">
+	<img src = >
+    <div class="col-xs-12 col-sm-9">
+	  <p class="pull-right visible-xs">
+	    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
+	  </p>
+	  <div class="jumbotron">
+	    <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
+	    <p>@{{profile.user.username}} located in Bangkok, Thailand </p>
+	  </div>
+
+	  	{% if connect_status == 0 %}
+	  	<!-- not connected yet -->
+	  		<a type="button" href = {% url 'account_send_request' profile.user.slug %} class="btn btn-default" ><span class = "glyphicon glyphicon-plus"></span> Add User </a>
+	  	{% elif connect_status = 1 %}
+	  	<!-- accept request or decline -->
+	  		<div class="btn-group" role="group">
+		    	<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		      	<span class = "glyphicon glyphicon-share-alt"></span> Response to Request <span class="caret"></span></span>
+		    	</button>
+		    	<ul class="dropdown-menu">
+		      		<li><a href={% url 'account_accept' profile.user.slug %}><span class = "glyphicon glyphicon-ok"> </span> Accept</a></li>
+		      		<li><a href={% url 'account_decline' profile.user.slug %}><span class = "glyphicon glyphicon-remove"> </span> Decline</a></li>
+	    		</ul>
+		  	</div>
+		{% elif connect_status = 2 %}
+		<!-- request sent not a response yet -->
+			<div class="btn-group" role="group">
+		    	<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		      	<span class = "glyphicon glyphicon-time"></span> Waiting for Response <span class="caret"></span></span>
+		    	</button>
+		    	<ul class="dropdown-menu">
+		      		<li><a href={% url 'account_cancel_request' profile.user.slug %}><span class = "glyphicon glyphicon-ban-circle"> </span> Cancel Request</a></li>
+	    		</ul>
+		  	</div>
+		{% elif connect_status = 3 %} 
+		<!-- Already Connect -->
+			<div class="btn-group" role="group">
+		    	<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		      	<span class = "glyphicon glyphicon-ok-circle"></span> Connected <span class="caret"></span></span>
+		    	</button>
+		    	<ul class="dropdown-menu">
+		      		<li><a href="#"><span class = "glyphicon glyphicon-user"> </span> Suggest a User</a></li>
+		      		<li><a href="#"><span class = "glyphicon glyphicon-ban-circle"> </span> Block</a></li>
+		      		<li><a href={% url 'account_remove' profile.user.slug %}><span class = "glyphicon glyphicon-remove-circle"> </span> Disconnect</a></li>
+	    		</ul>
+		  	</div>
+			<div class="btn-group" role="group" aria-label="...">
+		  		<button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-envelope"></span> Send Messages</button>
+		  		<button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-scale"></span> Manage Information </button>
+	  		</div>
+	  	{% elif connect_status = -1 %}
+	    <!-- Looking at yourself -->
+	  		<button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-pencil"></span> Edit My Profile </button>
+	  		<button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-scale"></span> Manage Information </button>
+	  	{% else %}
+	  		<button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-globe"></span> Log In </button> or
+	  		<button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-pencil"></span> Sign Up </button> to connect with {{ profile.user.username }}
+		{% endif %}
+
+	  <hr>
+	  <div class="row">
+		<div class = "col-lg-2">
+	      <img class="img-circle" src={% static "img/IMG_7024.JPG" %} width="140" height="140">
+	    </div>
+	    <div class = "col-lg-3">
+	    	<p><strong>Sex: </strong>Male</p>
+	    	{% if profile.client.height == None %}
+	    		<p><strong>&nbsp&nbspHeight:</strong> N/A </p>
+	    	{% else %}
+	    		<p><strong>&nbsp&nbspHeight:</strong> {{profile.client.height}} cm</p>
+	    	{% endif %}
+	    	{% if profile.client.weight == None %}
+	    		<p><strong>&nbsp&nbsp&nbsp&nbspWeight:</strong> N/A</p>
+	    	{% else %}
+	    		<p><strong>&nbsp&nbsp&nbsp&nbspWeight:</strong> {{profile.client.weight}} lbs</p>
+	    	{% endif %}
+	    	<p><strong>&nbsp&nbspAge:</strong> {{profile.age}} years</p>
+	    	<p><strong>Blood Type:</strong> {{profile.client.blood_type}}</p>
+	    </div>
+	    <div class = "col-lg-6">
+	    	<p><strong>Email:</strong> {{profile.user.email}} </p>
+	    	<p><strong>Address:</strong> The Business Centre 61 Wellfield Road Roath Cardiff CF24 3DG </p>
+	    	<p><strong>Birthdate:</strong> {{profile.user.date_of_birth}} </p>
+	    </div>
+	  </div>
+	  <hr>
+	  <div class="row">
+	    <div class="col-xs-6 col-lg-4">
+	      <h2>Heart Rate</h2>
+	      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+	      <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+	    </div><!--/.col-xs-6.col-lg-4-->
+	    <div class="col-xs-6 col-lg-4">
+	      <h2>Weight Data</h2>
+	      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+	      <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+	    </div><!--/.col-xs-6.col-lg-4-->
+	    <div class="col-xs-6 col-lg-4">
+	      <h2>Blood Pressure</h2>
+	      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+	      <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+	    </div><!--/.col-xs-6.col-lg-4-->
+	    <div class="col-xs-6 col-lg-4">
+	      <h2>Walking Pattern</h2>
+	      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+	      <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+	    </div><!--/.col-xs-6.col-lg-4-->
+	    <div class="col-xs-6 col-lg-4">
+	      <h2>Current Medicines</h2>
+	      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+	      <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+	    </div><!--/.col-xs-6.col-lg-4-->
+	    <div class="col-xs-6 col-lg-4">
+	      <h2>Doctors</h2>
+	      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+	      <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+	    </div><!--/.col-xs-6.col-lg-4-->
+	  </div><!--/row-->
+    </div><!--/.col-xs-12.col-sm-9-->
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+      <div class="list-group">
+        <a href= {% url 'account_detail' profile.user.username %} class="list-group-item active">About</a>
+        <a href="#" class="list-group-item">Heart Rate</a>
+        <a href="#" class="list-group-item">Weight Data</a>
+        <a href="#" class="list-group-item">Blood Pressure</a>
+        <a href="#" class="list-group-item">Walking Pattern</a>
+        <a href="#" class="list-group-item">Current Medicines</a>
+        <a href= {% url 'account_doctors' profile.user.username %} class="list-group-item">Doctors</a>
+      </div>
+     </div>
+</div>
+	
+    
+{% endblock %}

@@ -1,0 +1,434 @@
+{% extends 'new_base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}
+{{profile.full_name}}
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Users</h4>
+      </div>
+
+      <div class="modal-body p-a-0">
+        <div class="modal-body-scroller">
+          <ul class="media-list media-list-users list-group">
+            <li class="list-group-item">
+              <div class="media">
+                <a class="media-left" href="#">
+                  <img class="media-object img-circle" src={% static "img/avatar-fat.jpg" %}>
+                </a>
+                <div class="media-body">
+                  <button class="btn btn-default btn-sm pull-right">
+                    <span class="glyphicon glyphicon-user"></span> Follow
+                  </button>
+                  <strong>Jacob Thornton</strong>
+                  <p>@fat - San Francisco</p>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="media">
+                <a class="media-left" href="#">
+                  <img class="media-object img-circle" src={% static "img/avatar-dhg.png" %}>
+                </a>
+                <div class="media-body">
+                  <button class="btn btn-default btn-sm pull-right">
+                    <span class="glyphicon glyphicon-user"></span> Follow
+                  </button>
+                  <strong>Dave Gamache</strong>
+                  <p>@dhg - Palo Alto</p>
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="media">
+                <a class="media-left" href="#">
+                  <img class="media-object img-circle" src={% static "img/avatar-mdo.png" %}>
+                </a>
+                <div class="media-body">
+                  <button class="btn btn-default btn-sm pull-right">
+                    <span class="glyphicon glyphicon-user"></span> Follow
+                  </button>
+                  <strong>Mark Otto</strong>
+                  <p>@mdo - San Francisco</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container p-t-md">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="panel panel-default panel-profile m-b-md">
+        <div class="panel-heading" style="background-image: url(../../static/img/iceland.jpg);"></div>
+        <div class="panel-body text-center">
+          <a href="profile/index.html">
+            <img
+              class="panel-profile-img"
+              src = {{profile.image_url}}>
+          </a>
+
+          <h5 class="panel-title">
+            <a class="text-inherit" href="profile/index.html">{{profile.full_name}}</a>
+          </h5>
+
+          {% if profile.description %}
+            <p class="m-b-md">{{profile.description}}</p>
+          {% else %}
+            <p class="m-b-md"></p>
+          {% endif %}
+          <ul class="panel-menu">
+            <li class="panel-menu-item">
+              <a href="#userModal" class="text-inherit" data-toggle="modal">
+                Followers
+                <h5 class="m-y-0">12M</h5>
+              </a>
+            </li>
+
+            <li class="panel-menu-item">
+              <a href="#userModal" class="text-inherit" data-toggle="modal">
+                Connections
+                <h5 class="m-y-0">1</h5>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel" style = "background-color: #f5f8fa;
+      -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0);
+      box-shadow: 0 1px 1px rgba(0,0,0,0);">
+    	   {% if connect_status == 0 %}
+        <!-- not connected yet -->
+          <a type="button" href = {% url 'send_request' profile.user.slug %} class="btn btn-default" ><span class = "icon icon-add-user"></span> Add User </a>
+          <a type="button" href = "#" class="btn btn-default" ><span class = "icon icon-rss"></span> Follow </a>
+        {% elif connect_status = 1 %}
+      <!-- accept request or decline -->
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class = "glyphicon glyphicon-share-alt"></span> Response to Request <span class="caret"></span></span>
+          </button>
+          <ul class="dropdown-menu">
+              <li><a href={% url 'accept_request' profile.user.slug %}><span class = "glyphicon glyphicon-ok"> </span> Connect</a></li>
+              <li><a href={% url 'decline_request' profile.user.slug %}><span class = "glyphicon glyphicon-remove"> </span> Decline</a></li>
+          </ul>
+        </div>
+    {% elif connect_status = 2 %}
+    <!-- request sent not a response yet -->
+      <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class = "glyphicon glyphicon-time"></span> Waiting for Response <span class="caret"></span></span>
+          </button>
+          <ul class="dropdown-menu">
+              <li><a href={% url 'account_cancel_request' profile.user.slug %}><span class = "glyphicon glyphicon-ban-circle"> </span> Cancel Request</a></li>
+          </ul>
+        </div>
+    {% elif connect_status = 3 %} 
+    <!-- Already Connect -->
+      <div class="btn-group" role="group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class = "glyphicon glyphicon-ok-circle"></span> Connected <span class="caret"></span></span>
+          </button>
+          <ul class="dropdown-menu">
+              <li><a href="#"><span class = "glyphicon glyphicon-user"> </span> Suggest a User</a></li>
+              <li><a href="#"><span class = "glyphicon glyphicon-ban-circle"> </span> Block</a></li>
+              <li><a href={% url 'remove_connection' profile.user.slug %}><span class = "glyphicon glyphicon-remove-circle"> </span> Disconnect</a></li>
+          </ul>
+        </div>
+        <button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-scale"></span> Manage Info </button>
+        <button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-envelope"></span> Message</button>
+      {% elif connect_status = -1 %}
+      <!-- Looking at yourself -->
+        <button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-pencil"></span> Edit Profile </button>
+        <button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-scale"></span> Manage Info </button>
+      {% else %}
+        <button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-globe"></span> Log In </button> or
+        <button type="button" class="btn btn-default"><span class = "glyphicon glyphicon-pencil"></span> Sign Up </button> to connect with {{ profile.user.username }}
+    {% endif %}
+    	</div>
+
+      <div class="panel panel-default visible-md-block visible-lg-block">
+        <div class="panel-body">
+          <h5 class="m-t-0">About <small>· <a href="#">Edit</a></small></h5>
+          <ul class="list-unstyled list-spaced">
+            <li><span class="text-muted icon icon-hour-glass m-r"></span>Born in <a href="#"> {{profile.user.date_of_birth}} </a>
+            <li><span class="text-muted icon icon-email m-r"></span><a href= "mailto:{{profile.user.email}}" >{{profile.user.email}}</a>
+            <li><span class="text-muted icon icon-home m-r"></span>Lives in <a href="http://maps.google.com/?q=San Francisco, CA">San Francisco, CA</a>
+            <li><span class="text-muted icon icon-location-pin m-r"></span>From <a href="#">Seattle, WA</a>
+          </ul>
+        </div>
+      </div>
+
+       <div class="panel panel-default visible-md-block visible-lg-block">
+        <div class="panel-body">
+          <h5 class="m-t-0">Photos <small>· <a href="#">Edit</a></small></h5>
+          <div data-grid="images" data-target-height="150">
+            <div>
+              <img data-width="640" data-height="640" data-action="zoom" src={% static "img/instagram_5.jpg" %}>
+            </div>
+
+            <div>
+              <img data-width="640" data-height="640" data-action="zoom" src={% static "img/instagram_6.jpg" %}>
+            </div>
+
+            <div>
+              <img data-width="640" data-height="640" data-action="zoom" src={% static "img/instagram_7.jpg" %}>
+            </div>
+
+            <div>
+              <img data-width="640" data-height="640" data-action="zoom" src={% static "img/instagram_8.jpg" %}>
+            </div>
+
+            <div>
+              <img data-width="640" data-height="640" data-action="zoom" src={% static "img/instagram_9.jpg" %}>
+            </div>
+
+            <div>
+              <img data-width="640" data-height="640" data-action="zoom" src={% static "img/instagram_10.jpg" %}>
+            </div>
+          </div>
+        </div>
+      </div>
+
+       <div class="panel panel-default">
+        <div class="panel-body">
+          <h5 class="m-t-0"> My Health <span class="icon icon-line-graph"></span> </h5>
+          <ul class="list-unstyled list-spaced">
+            <li><span class="text-muted glyphicon glyphicon-heart m-r"></span><a href="#">Heartrate</a> - 5 days ago
+            <li><span class="text-muted icon icon-man m-r"></span><a href="#">Steps</a> - 4 mins ago
+            <li><span class="text-muted glyphicon glyphicon-scale m-r"></span><a href="#">Weight</a> - 5 days ago
+            <li><span class="text-muted icon icon-drop m-r"></span><a href="#">Blood Pressure</a> - a week ago
+            <li><span class="text-muted icon icon-thermometer m-r"></span><a href="#">Temperature</a> - 10 hours ago
+            <li><span class="text-muted icon icon-lab-flask m-r"></span><a href="#">Medicines</a> - 5 hours ago
+            
+          </ul>
+
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+    <div class="col-md-6">
+      <ul class="list-group media-list media-list-stream">
+
+        <li class="media list-group-item p-a">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Message">
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-default">
+                <span class="icon icon-camera"></span>
+              </button>
+            </div>
+          </div>
+        </li>
+
+        <li class="media list-group-item p-a">
+          <a class="media-left" href="#">
+            <img
+              class="media-object img-circle"
+              src={% static "img/avatar-dhg.png" %}>
+          </a>
+          <div class="media-body">
+            <div class="media-heading">
+              <small class="pull-right text-muted">4 min</small>
+              <h5>Dave Gamache</h5>
+            </div>
+
+            <p>
+              Aenean lacinia bibendum nulla sed consectetur. Vestibulum id ligula porta felis euismod semper. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+            </p>
+
+            <div class="media-body-inline-grid" data-grid="images">
+              <div style="display: none">
+                <img data-action="zoom" data-width="1050" data-height="700" src={% static "img/unsplash_1.jpg" %}>
+              </div>
+
+              <div style="display: none">
+                <img data-action="zoom" data-width="640" data-height="640" src={% static "img/instagram_1.jpg" %}>
+              </div>
+
+              <div style="display: none">
+                <img data-action="zoom" data-width="640" data-height="640" src={% static "img/instagram_13.jpg" %}>
+              </div>
+
+              <div style="display: none">
+                <img data-action="zoom" data-width="1048" data-height="700" src={% static "img/unsplash_2.jpg" %}>
+              </div>
+            </div>
+
+            <ul class="media-list m-b">
+              <li class="media">
+                <a class="media-left" href="#">
+                  <img
+                    class="media-object img-circle"
+                    src={% static "img/avatar-fat.jpg" %}>
+                </a>
+                <div class="media-body">
+                  <strong>Jacon Thornton: </strong>
+                  Donec id elit non mi porta gravida at eget metus. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec ullamcorper nulla non metus auctor fringilla. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Sed posuere consectetur est at lobortis.
+                </div>
+              </li>
+              <li class="media">
+                <a class="media-left" href="#">
+                  <img
+                    class="media-object img-circle"
+                    src={% static "img/avatar-mdo.png" %}>
+                </a>
+                <div class="media-body">
+                  <strong>Mark Otto: </strong>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="media list-group-item p-a">
+          <a class="media-left" href="#">
+            <img
+              class="media-object img-circle"
+              src={% static "img/avatar-fat.jpg" %}>
+          </a>
+          <div class="media-body">
+            <div class="media-body-text">
+              <div class="media-heading">
+                <small class="pull-right text-muted">12 min</small>
+                <h5>Jacob Thornton</h5>
+              </div>
+              <p>
+                Donec id elit non mi porta gravida at eget metus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </p>
+            </div>
+          </div>
+        </li>
+
+        <li class="media list-group-item p-a">
+          <a class="media-left" href="#">
+            <img
+              class="media-object img-circle"
+              src={% static "img/avatar-mdo.png" %}>
+          </a>
+          <div class="media-body">
+            <div class="media-heading">
+              <small class="pull-right text-muted">34 min</small>
+              <h5>Mark Otto</h5>
+            </div>
+
+            <p>
+              Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+            </p>
+
+            <div class="media-body-inline-grid" data-grid="images">
+              <img style="display: none" data-width="640" data-height="640" data-action="zoom" src={% static "img/instagram_3.jpg" %}>
+            </div>
+
+            <ul class="media-list">
+              <li class="media">
+                <a class="media-left" href="#">
+                  <img
+                    class="media-object img-circle"
+                    src={% static "img/avatar-dhg.png" %}>
+                </a>
+                <div class="media-body">
+                  <strong>Dave Gamache: </strong>
+                  Donec id elit non mi porta gravida at eget metus. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec ullamcorper nulla non metus auctor fringilla. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Sed posuere consectetur est at lobortis.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-3">
+      <div class="alert alert-warning alert-dismissible hidden-xs" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <a class="alert-link" href="profile/index.html">Visit your profile!</a> Check your self, you aren't looking too good.
+      </div>
+
+      <div class="panel panel-default m-b-md hidden-xs">
+        <div class="panel-body">
+          <h5 class="m-t-0">Sponsored</h5>
+          <div data-grid="images" data-target-height="150">
+            <img class="media-object" data-width="640" data-height="640" data-action="zoom" src={% static "img/instagram_2.jpg" %}>
+          </div>
+          <p><strong>It might be time to visit Iceland.</strong> Iceland is so chill, and everything looks cool here. Also, we heard the people are pretty nice. What are you waiting for?</p>
+          <button class="btn btn-primary-outline btn-sm">Buy a ticket</button>
+        </div>
+      </div>
+
+
+      <div class="panel panel-default m-b-md hidden-xs">
+        <div class="panel-body">
+        <h5 class="m-t-0">Connections <small>· <a href="#">View All</a></small></h5>
+        <ul class="media-list media-list-stream">
+          {% for connection in profile.connections.all %}
+            <li class="media m-b">
+              <a class="media-left" href={{connection.user.get_absolute_url}}>
+                <img
+                  class="media-object img-circle"
+                  src= {{connection.image_url}}>
+              </a>
+              <div class="media-body">
+                <strong>{{connection.full_name}}</strong> @{{connection.user.username}}
+                <div class="media-body-actions">
+                  <!-- <p> {{connection.description}} </p> -->
+                  <a href = {{connection.user.get_absolute_url}} class="btn btn-primary-outline btn-sm">
+                     View Detail </a>
+                </div>
+              </div>
+            </li>
+          {% empty %}
+            <li class="media m-b">
+              <p>
+                {{profile.full_name}} currently has no connection :(
+            </li>
+          {% endfor %}
+        </ul>
+        </div>
+        <div class="panel-footer">
+          There are currently {{request.user.profile.connections.count}} connections for {{request.user.profile.full_name}}
+        </div>
+      </div>
+
+      <div class="panel panel-default panel-link-list">
+        <div class="panel-body">
+          © 2015 Bootstrap
+
+          <a href="#">About</a>
+          <a href="#">Help</a>
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+          <a href="#">Ads </a>
+
+          <a href="#">info</a>
+          <a href="#">Brand</a>
+          <a href="#">Blog</a>
+          <a href="#">Status</a>
+          <a href="#">Apps</a>
+          <a href="#">Jobs</a>
+          <a href="#">Advertise</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

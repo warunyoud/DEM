@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Search | DEM {% endblock %}
+
+{% block content %}
+
+{% if objs %}
+	<h1>Search Results</h1>
+	{% for obj in objs %}
+		<hr class="featurette-divider">
+		<h3><a href = {% url 'doctor_detail' obj.user.slug %} {{obj.user.username}}> @ {{obj}} </a></h3>
+		<h4>{{obj.user.profile.doctor.speciality}} - {{obj.user.first_name }} {{obj.user.last_name}}</h4>
+	{% endfor %}
+
+{% else %}
+	<h1> No Search Result Founded </h1>
+	<h3> Please try a different keyword </h3>
+	<form method "GET" action = {% url 'search_doctors' %} class = "col-md-7" role="search">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="Search for Doctors" name = "q">
+			<span class="input-group-btn">
+	        	<button class="btn btn-default" type="submit">Go!</button>
+	      	</span>
+		</div>
+	</form>	
+	<br>
+	<br>
+{% endif %}
+
+
+
+{% endblock %}

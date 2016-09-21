@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Videos| DEM {% endblock %}
+
+{% block content %}
+
+{{ queryset }}
+
+{% for video in queryset %}
+	<p>
+		<h2> {{ forloop.counter }}: {{ video.title }} </h2>
+		{{video.embed_code|safe}}
+		<br/>
+		<a href="{{ video.get_absolute_url}}" > http:www.dem.com{{ video.get_absolute_url }}</a>
+		<br/>
+	</p>
+{% endfor %}
+
+{% endblock %}

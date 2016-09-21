@@ -1,0 +1,125 @@
+
+
+{% load staticfiles %}
+
+{% block title %}
+sup
+{% endblock %}
+
+{% block content %}
+
+<!-- Main component for a primary marketing message or call to action -->
+<div class="jumbotron">
+	<div class = "row">
+		<div class = "col-sm-6">
+			<h1>Welcome</h1>
+			<p class ="lead-jumbotron">This is our website</p>
+		</div>
+		<div class = "col-sm-6">
+			<ul class="nav nav-tabs nav-tabs-jumbotron">
+				<li class="active"><a data-toggle="tab" href="#register">Register</a></li></span>
+				<li><a data-toggle="tab" href="#signin">Sign In</a></li>
+			</ul>
+			<div class="tab-content">
+				<!-- Register -->
+				<div id="register" class="tab-pane fade in active">
+					<div class="panel panel-default panel-jumbotron">
+						<div class="panel-body">
+							<form method = 'POST' action ='./'> {% csrf_token %}
+								{% for field in register_form %}
+									<p>
+									{{ field.errors }}
+									{% if field.label == "I am a doctor" %}
+										{{ field }}  I am <a href = "#"> a doctor or a specialist </a>who would like to create an account to work with my clients.
+									{% elif field.label == "I agree" %}
+										{{ field }} I have read and accepted <a href="#"> the terms and conditions.
+										</a>
+									{% else %}
+										{{ field.label_tag }} {{ field }}
+									{% endif %}
+									</p>
+								{% endfor %}
+
+								<input class = 'btn btn-default btn-block btn-lg' type= 'submit' value = 'Register' />
+								<input class = 'btn btn-primary btn-block btn-lg' type= 'submit' value = 'Register with Facebook' />
+								<input class = 'btn btn-danger btn-block btn-lg' type= 'submit' value = 'Register with Google+' />
+							</form>
+						</div> 
+					</div>
+				</div>
+				<!-- Sign in -->
+				<div id="signin" class="tab-pane fade">
+					<div class="panel panel-default panel-jumbotron">
+						<div class="panel-body">
+							<form method = 'POST' action ='./'> {% csrf_token %}
+								{{login_form.as_p}}
+								<p><a href = "">Forgot my password?</a></p>
+								<p>Don't have an account?<a href = ""> Sign up</a></p>
+
+								<input class = 'btn btn-default btn-block btn-lg' type= 'submit' value = 'Sign In' />
+								<input class = 'btn btn-primary btn-block btn-lg' type= 'submit' value = 'Sign In with Facebook' />
+								<input class = 'btn btn-danger btn-block btn-lg' type= 'submit' value = 'Sign In with Google+' />
+								
+							</form>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		
+	</div>
+		
+</div>
+
+
+  <!-- START THE FEATURETTES -->
+<hr class="featurette-divider">
+
+<div class="row featurette">
+	<div class="col-md-7">
+		<h2 class="featurette-heading">Collect information<span class="text-muted"> and examine your health.</span></h2>
+		<p class="lead">With DEM you will be able to upload your medical data and view it whenever you want.</p>
+	</div>
+	<div class="col-md-5">
+		<img class="featurette-image img-responsive center-block" src="http://i2.wp.com/cdn.bgr.com/2015/05/hello-heart-1.jpg?w=625" alt="Generic placeholder image">
+	</div>
+</div>
+
+<hr class="featurette-divider">
+
+<div class="row featurette">
+	<div class="col-md-7 col-md-push-5">
+		<h2 class="featurette-heading"> Stay informed <span class="text-muted"> and connect with your doctors. </span></h2>
+		<p class="lead">DEM allows you to manage how much you want to share your medical information with each doctor and specialist. With medical data, such as heartbeat, blood pressure, and temperature, many symptoms could be identified quickly even before becoming real problems.</p>
+	</div>
+	<div class="col-md-5 col-md-pull-7">
+		<img class="featurette-image img-responsive center-block" src="https://onlinedoctor.lloydspharmacy.com/image/18712/large4x3/400/300/172ccccb2bf38ee9f4651f3a89043837/lI/doctor-talking-to-patient---free-advice.jpg" alt="Generic placeholder image">
+	</div>
+</div>
+
+
+
+
+{% endblock %}
+
+<style>
+
+{% block style %}
+
+.jumbotron{
+	background-image: url("http://fullhdpictures.com/wp-content/uploads/2016/01/Magnificent-Hospital-Wallpaper.jpg");
+	background-size: 1282px 770px;
+	min-height: 770px;
+}
+
+.jumbotron h1, .lead-jumbotron{
+	color: #FFF;
+}
+
+
+{% endblock %}
+
+</style>

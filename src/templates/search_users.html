@@ -1,0 +1,128 @@
+{% extends "new_base.html" %}
+
+{% block title %} {{query}} - DEM Search {% endblock %}
+
+{% block content %}
+
+<div class="profile-header"
+     style="background-image: url(../../static/img/iceland.jpg);">
+  <div class="container">
+    <div class="container-inner">
+      <h3 class="profile-header-user">Search Result</h3>
+    </div>
+  </div>
+
+  <nav class="profile-header-nav">
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a href="#">Users</a>
+      </li>
+      <li>
+        <a href="#">Places</a>
+      </li>
+      <li>
+        <a href="#">Products</a>
+      </li>
+      <li>
+        <a href="#">Medicines</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<div class="container p-t-md">
+	<div class="row">
+    	<div class="col-md-3">
+    		<div class="panel panel-default">
+		        <div class="panel-body">
+
+			        <h5 class="m-t-0"> Filter </h5>
+			        <div class="checkbox custom-control custom-checkbox">
+						 <label>
+						    <input type="checkbox">
+						    <span class="custom-control-indicator"></span>
+						    Pro Only
+						 </label>
+					</div>
+					<div class="checkbox custom-control custom-checkbox">
+						 <label>
+						    <input type="checkbox" checked>
+						    <span class="custom-control-indicator"></span>
+						    Regular Users
+						 </label>
+					</div>
+					<div class="checkbox custom-control custom-checkbox">
+						 <label>
+						    <input type="checkbox" checked>
+						    <span class="custom-control-indicator"></span>
+						    Doctors
+						 </label>
+					</div>
+					<div class="checkbox custom-control custom-checkbox">
+						 <label>
+						    <input type="checkbox" checked>
+						    <span class="custom-control-indicator"></span>
+						    Nutritionists
+						 </label>
+					</div>
+					<div class="checkbox custom-control custom-checkbox">
+						 <label>
+						    <input type="checkbox" checked>
+						    <span class="custom-control-indicator"></span>
+						    Trainers
+						 </label>
+					</div>
+
+		        </div>
+		    </div>
+    	</div>
+
+
+
+   		<div class="col-md-6">
+			{% if objs %}
+				<p>Showing search results for <strong>{{query}}</strong></p>
+				<ul class="media-list media-list-users list-group">
+					{% for obj in objs %}
+					<li class="list-group-item">
+					    <div class="media">
+					      	<a class="media-left" href= {{obj.user.get_absolute_url}}>
+					        	<img class="media-object img-circle" src= {{obj.image_url}}>
+					     	</a>
+					      	<div class="media-body">
+						        <button class="btn btn-primary-outline btn-sm pull-right">
+						          	<span class="icon icon-add-user"></span> Follow
+						        </button>
+						        <strong>{{obj.full_name}}</strong>
+						        <small>@{{obj.user.username}} - San Francisco</small>
+						        <br>
+						        {{obj.description}}
+						    </div>
+					    </div>
+					</li>
+					{% endfor %}
+				  	
+				</ul>
+				
+
+			{% else %}
+				<h1> No Search Result Founded </h1>
+				<h3> Please try a different keyword </h3>
+				<form method "GET" action = {% url 'search_users' %} class = "col-md-7" role="search">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search for Users" name = "q">
+						
+						<span class="input-group-btn">
+				        	<button class="btn btn-default" type="submit">Go!</button>
+				      	</span>
+					</div>
+				</form>	
+				<br>
+				<br>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

@@ -2,6 +2,8 @@
 /***
 Get the update for the navbar 
 ***/
+var currentChat = -1;
+
 function getUpdate(){
   $.get("{% url 'get_updates_ajax' %}", function(messages){
       $("#requestC").html('');
@@ -65,6 +67,35 @@ $(document).on('click', '.js-gotoMsgs2', function () {
   $('.js-msgGroup, .js-newMsg').removeClass('hide')
   $('.modal-title').html('Messages')
 })
+
+$(document).on('click', '.msgChat', function(event){
+  currentChat = this.id;
+  //updateChat()
+})
+
+function updateChat(){
+  $.ajax({
+      type: "POST",
+      url: "{% url 'get_chat_ajax' %}",
+      data: {
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        chatID: currentChat
+      },
+      success: function(data){
+        // $("#msg_dropdown").html('');
+        
+
+        // $(data.notifications).each(function(){
+        //   $("#msg_dropdown").append(this);
+        // })
+
+      },
+      error: function(rs, e) {
+        console.log(rs);
+        console.log(e);
+      }
+    })
+}
 
 
 /***********
@@ -263,4 +294,5 @@ $(document).ready(function(){
       }
     })
   })
+
 })
